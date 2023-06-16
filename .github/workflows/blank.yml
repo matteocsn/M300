@@ -1,0 +1,28 @@
+name: Convert README.md to PDF
+
+on:
+  label:
+    types:
+      - created
+  push:
+    branches:
+      - main
+  page_build:
+
+jobs:
+  converttopdf:
+    name: Build PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build book
+        run: |-
+          npm install -g md-to-pdf
+          mkdir -p _output
+          cat README.md | md-to-pdf > _output/README-MD.pdf
+      
+      - uses: actions/upload-artifact@v1
+        with:
+          name: output
+          path: _output
