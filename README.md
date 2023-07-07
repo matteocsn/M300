@@ -2,10 +2,10 @@
 
 Eine Projektarbeit von:
 
-Matteo Causin 
-Informatiker EFZ Systemtechnik
-UBS AG 
-3. Lehrjahr 
+Matteo Causin </br>
+Informatiker EFZ Systemtechnik </br>
+UBS AG </br>
+3. Lehrjahr </br>
 
 
 
