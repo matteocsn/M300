@@ -11,18 +11,32 @@ UBS AG </br>
 ## Inhalt
 - [M300 LB2 - Container Service](#m300-lb2---container-service)
   - [Inhalt](#inhalt)
-  - [Vorbereitung mit vagrant und Bitvise](#vorbereitung-mit-vagrant-und-bitvise)
   - [Einführung](#einführung)
+  - [Vorbereitung mit Vagrant und Bitvise](#vorbereitung-mit-vagrant-und-bitvise)
   - [Dockerfile](#dockerfile)
   - [Docker-Compose](#docker-compose)
   - [Starten](#starten)
   - [Beenden](#beenden)
   - [Testing](#testing)
+  - [Quellen](#quellen)
    
 
-## Vorbereitung mit vagrant und Bitvise 
+<a name="Einführung"></a>
+## Einführung
 
-Für diese Projekt erstellen wir eine Vagrant VM auf der wir dann das Projekt ausführen. Damit diese fuktioniert brauchen wir ein Vagrant File. in diesem File ist definiert wie die VM aussehen soll: 
+Ziel war es einen Service in Docker zu installieren, welcher auf jedem Rechner Wiederholbar und konsistent ausführbar ist. 
+In diesem Beispiel handelt es sich um einen Apache Webserver. Der Service startet lediglich mit einem Befehl. Das Image wird mit Hilfe eines Dockerfiles erstellt. Andere Konfigurationen sind im docker-compose.yml File festgehalten worden. Sobald dieser läuft ist es möglich die Website aufzurufen. 
+
+<a name="Vorbereitung"></a>
+## Vorbereitung mit Vagrant und Bitvise 
+
+Für diese Projekt erstellen wir eine Vagrant VM auf der wir dann das Projekt ausführen. Damit diese fuktioniert brauchen wir ein Vagrant File. Dies geht mit folgendem befehl 
+
+
+```vagrant init```
+
+
+In diesem File ist definiert wie die Vm aussehen soll: 
 
 ```
 # -*- mode: ruby -*-
@@ -81,16 +95,14 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-Hier drin ist auch definiert welches Betriebssystem 
+Hier drin ist auch definiert welches Betriebssystem verwendet wird. 
 
+mit ``` vagrant up ``` kann man die Vm dann aufbauen und starten
 
-<a name="Einführung"></a>
-## Einführung
+Mit Bitvise erstelle ich dann einen SSH key der in meinem lokalen vagrant ordner erstellt wird. Danach kann ich mich mit dem treminal auf die VM verbinden. 
 
-Ziel war es einen Service in Docker zu installieren, welcher auf jedem Rechner Wiederholbar und konsistent ausführbar ist. 
-In diesem Beispiel handelt es sich um einen Apache Webserver. Der Service startet lediglich mit einem Befehl. Das Image wird mit Hilfe eines Dockerfiles erstellt. Andere Konfigurationen sind im docker-compose.yml File festgehalten worden. Sobald dieser läuft ist es möglich die Website aufzurufen. 
+Wenn dies vollbracht ist, geht es wie folgt weiter: 
 
-![Ports](https://github.com/maathumitha/M300/blob/main/img/Ports.png)
 
 <a name="Dockerfile"></a>
 ## Dockerfile
@@ -102,10 +114,8 @@ FROM nginx:alpine
 #der "." definiert das alle existing files in diese repository gezogen werden. im letzten Ordner "html" wird dann das index.hmtl File gemountet. 
 COPY . /usr/share/nginx/html
 
-
 #Port exposing
 EXPOSE 80
-
 ```
 <a name="Docker-Compose"></a>
 
@@ -144,7 +154,12 @@ docker-compose down
 
 <a name="Testing"></a>
 ## Testing
-Sobald der Container gestartet worden ist kann über <http:\\127.0.0.1:8082> bzw. <http:\\localhost:8082<> die Website aufgerufen werden. 
+Sobald der Container gestartet worden ist kann über <http:\\127.0.0.1:8082> bzw. <http:\\localhost:8082> die Website aufgerufen werden. 
 Es wird der Inhalt des Dokuments im Ordner "./site-content/"  aus dem Dockerfiles angezeigt. 
 
 ![Access_test](https://github.com/matteocsn/M300/blob/main/img/Website-LB2.png)
+
+
+## Quellen
+
+- <https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Simple-Apache-docker-compose-example-with-Dockers-httpd-image>
