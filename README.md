@@ -2,16 +2,16 @@
 
 Eine Projektarbeit von:
 
-Matteo Causin </br>
+Matteo Gioachino Causin </br>
 Informatiker EFZ Systemtechnik </br>
-UBS AG </br>
 3. Lehrjahr </br>
-
+UBS AG </br>
 
 
 ## Inhalt
 - [M300 LB2 - Container Service](#m300-lb2---container-service)
   - [Inhalt](#inhalt)
+  - [Vorbereitung mit vagrant und Bitvise](#vorbereitung-mit-vagrant-und-bitvise)
   - [Einführung](#einführung)
   - [Dockerfile](#dockerfile)
   - [Docker-Compose](#docker-compose)
@@ -19,6 +19,71 @@ UBS AG </br>
   - [Beenden](#beenden)
   - [Testing](#testing)
    
+
+## Vorbereitung mit vagrant und Bitvise 
+
+Für diese Projekt erstellen wir eine Vagrant VM auf der wir dann das Projekt ausführen. Damit diese fuktioniert brauchen wir ein Vagrant File. in diesem File ist definiert wie die VM aussehen soll: 
+
+```
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+#
+#	Ubuntu Jammy 64-bit Linux mit Docker
+#
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/jammy64"
+
+  # Create forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. 
+  # NOTE: This will enable public access to the opened ports
+  config.vm.network "forwarded_port", guest:8082, host:8082, auto_correct: true
+    
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.hostname = "docker"
+  # Share an additional folder to the guest VM.
+  config.vm.synced_folder ".", "/mnt"
+
+  config.vm.provider "virtualbox" do |vb|
+     vb.memory = "2048"
+  end
+  
+  config.vm.provision "shell", inline: <<-SHELL
+  #Get Docker Image
+  sudo apt-get update
+  sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+	
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg 
+  echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+  #Install Docker
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+
+  SHELL
+
+  # add ssh public keys for root and vagrant 
+  config.vm.provision "shell", path: "scripts/add_ssh_pub.sh"
+  # add alias
+  config.vm.provision "shell", path: "scripts/add_alias.sh"
+  
+end
+```
+
+Hier drin ist auch definiert welches Betriebssystem 
+
+
 <a name="Einführung"></a>
 ## Einführung
 
@@ -32,10 +97,11 @@ In diesem Beispiel handelt es sich um einen Apache Webserver. Der Service starte
 Mit dem Dockerfile wird das Image erstellt, welches dann für den Container verwendet werden kann.
 ```
 #Baseimage
-FROM httpd:latest
+FROM nginx:alpine
 
-#Website-Files wie bspw. index.html
-COPY ./website/ /usr/local/apache2/htdocs/
+#der "." definiert das alle existing files in diese repository gezogen werden. im letzten Ordner "html" wird dann das index.hmtl File gemountet. 
+COPY . /usr/share/nginx/html
+
 
 #Port exposing
 EXPOSE 80
@@ -50,13 +116,14 @@ Achtung: Die Syntax beim .yml File ist sehr wichtig und kann schnell zu Fehlern 
 ```
 version: '3'
 services:
-  web:
+  nginx:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 8082:80
-    restart: always 
+    volumes:
+      - ./site-content:/usr/share/nginx/html
 ```
 
 
@@ -70,14 +137,14 @@ docker-compose up --build -d
 
 <a name="Beenden"></a>
 ## Beenden
-Mit folgendem Befehl, kann der Container beendet werden.
+Mit folgendem Befehl, wird der ontainer heruntergefahren
 ```
 docker-compose down
 ```
 
 <a name="Testing"></a>
 ## Testing
-Sobald der Container gestartet worden ist kann über <http:\\127.0.0.1:8082> bzw. http:\\localhost:8082 die Website aufgerufen werden. 
-Es wird der Inhalt des Dokuments im Ordner "./website/"  aus dem Dockerfiles angezeigt. 
+Sobald der Container gestartet worden ist kann über <http:\\127.0.0.1:8082> bzw. <http:\\localhost:8082<> die Website aufgerufen werden. 
+Es wird der Inhalt des Dokuments im Ordner "./site-content/"  aus dem Dockerfiles angezeigt. 
 
 ![Access_test](https://github.com/matteocsn/M300/blob/main/img/Website-LB2.png)
