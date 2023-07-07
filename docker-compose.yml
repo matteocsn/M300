@@ -8,3 +8,4 @@ services:
       - 8082:80
     volumes:
       - ./site-content:/usr/share/nginx/html
+    restart: always

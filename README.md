@@ -15,8 +15,10 @@ UBS AG </br>
   - [Vorbereitung mit Vagrant und Bitvise](#vorbereitung-mit-vagrant-und-bitvise)
   - [Dockerfile](#dockerfile)
   - [Docker-Compose](#docker-compose)
-  - [Starten](#starten)
-  - [Beenden](#beenden)
+  - [Index.html](index.html)
+  - [Bedienung](Bedienung)
+    -  [Starten](#starten)
+    - [Beenden](#beenden)
   - [Testing](#testing)
   - [Quellen](#quellen)
    
@@ -24,8 +26,8 @@ UBS AG </br>
 <a name="Einführung"></a>
 ## Einführung
 
-Ziel war es einen Service in Docker zu installieren, welcher auf jedem Rechner Wiederholbar und konsistent ausführbar ist. 
-In diesem Beispiel handelt es sich um einen Apache Webserver. Der Service startet lediglich mit einem Befehl. Das Image wird mit Hilfe eines Dockerfiles erstellt. Andere Konfigurationen sind im docker-compose.yml File festgehalten worden. Sobald dieser läuft ist es möglich die Website aufzurufen. 
+Ziel ist es, einen Dienst mit Docker zu installieren, der auf jeder Maschine wiederholt und konsistent ausgeführt werden kann.
+In diesem Beispiel verwende ich einen Nginx-Webserver. Das Image wurde mit einer Docker-Datei erstellt. Weitere Konfigurationen sind in der Datei docker-compose.yml dokumentiert. Sobald die Website ausgeführt wird, kann darauf zugegriffen werden.
 
 <a name="Vorbereitung"></a>
 ## Vorbereitung mit Vagrant und Bitvise 
@@ -97,9 +99,9 @@ end
 
 Hier drin ist auch definiert welches Betriebssystem verwendet wird. 
 
-mit ``` vagrant up ``` kann man die Vm dann aufbauen und starten
+mit ``` vagrant up ``` kann man die Vm dann aufbauen und starten.
 
-Mit Bitvise erstelle ich dann einen SSH key der in meinem lokalen vagrant ordner erstellt wird. Danach kann ich mich mit dem treminal auf die VM verbinden. 
+Mit Bitvise erstelle ich dann einen SSH key, der in meinem lokalen vagrant Ordner erstellt wird. Danach kann ich mich mit dem Terminal auf die VM verbinden. 
 
 Wenn dies vollbracht ist, geht es wie folgt weiter: 
 
@@ -120,9 +122,9 @@ EXPOSE 80
 <a name="Docker-Compose"></a>
 
 ## Docker-Compose
-Im Docker-Compose.yml FIle werden Konfigurationen am Image festgehalten. Wichtig ist, dass der Pfad des Dockerfiles auch angegeben wird. Auch sind Netzwerkkonfigurationen für die Ports in diesem File konfiguriert worden. 
+Im Docker-Compose.yml File werden Konfigurationen am Image festgehalten. Wichtig ist, dass der Pfad des Dockerfiles auch angegeben wird. Auch sind Netzwerkkonfigurationen für die Ports in diesem File konfiguriert worden. 
 Achtung: Die Syntax beim .yml File ist sehr wichtig und kann schnell zu Fehlern führen.
-[Quelle](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Simple-Apache-docker-compose-example-with-Dockers-httpd-image)
+
 ```
 version: '3'
 services:
@@ -134,23 +136,48 @@ services:
       - 8082:80
     volumes:
       - ./site-content:/usr/share/nginx/html
+    restart: always
 ```
+Die Zeile "restart: always" ist für die Sicherheit zuständig. 
 
+Was man bei den .yml files beachten muss, ist der Syntax. Eine leertaste zu wenig oder zu viel und das ganze funktioniert nicht.
 
+<a name="Index.html"></a>
+## Index.html
+
+In diesem File ist der Code definiert, der auf der Webseite angezeigt wird. Wichtig ist, das man den Charset auf UTF-8 setzt, damit die Umlaute richtig angezeigt werden. 
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"> 
+  <title>Container sind cool</title>
+</head>
+<body>
+  <p>Und ich arbeite gerne mit makrdown :)</p>
+</body>
+</html>
+```
+<a name="Bedienung"></a>
+
+## Bedienung
 
 <a name="Starten"></a>
-## Starten
+### Starten
 Mit folgendem Befehl, kann der Container gestartet werden. Nach dem der Container das erste Mal gestartet worden ist, kann der Parameter "--build" weggelassen werden.
 ```
 docker-compose up --build -d
 ```
 
 <a name="Beenden"></a>
-## Beenden
-Mit folgendem Befehl, wird der ontainer heruntergefahren
+### Beenden
+Mit folgendem Befehl, wird der Container heruntergefahren
 ```
 docker-compose down
 ```
+Er wird mit ```docker-compose up```, ganz simple und einfach wieder aufgestartet. 
+
 
 <a name="Testing"></a>
 ## Testing
@@ -159,7 +186,8 @@ Es wird der Inhalt des Dokuments im Ordner "./site-content/"  aus dem Dockerfile
 
 ![Access_test](https://github.com/matteocsn/M300/blob/main/img/Website-LB2.png)
 
-
 ## Quellen
 
 - <https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Simple-Apache-docker-compose-example-with-Dockers-httpd-image>
+- <https://docs.docker.com/engine/reference/commandline/compose/>
+- Kursscript und Dokumentationen
