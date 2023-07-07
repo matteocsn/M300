@@ -1,8 +1,16 @@
-# M300 - Container Service
+# M300 LB2 - Container Service
+
+Eine Projektarbeit von:
+
+Matteo Causin 
+Informatiker EFZ Systemtechnik
+UBS AG 
+3. Lehrjahr 
+
 
 
 ## Inhalt
-- [M300 - Container Service](#m300---container-service)
+- [M300 LB2 - Container Service](#m300-lb2---container-service)
   - [Inhalt](#inhalt)
   - [Einführung](#einführung)
   - [Dockerfile](#dockerfile)
