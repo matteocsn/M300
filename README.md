@@ -15,8 +15,8 @@ UBS AG </br>
   - [Vorbereitung mit Vagrant und Bitvise](#vorbereitung-mit-vagrant-und-bitvise)
   - [Dockerfile](#dockerfile)
   - [Docker-Compose](#docker-compose)
-  - [Index.html](index.html)
-  - [Bedienung](Bedienung)
+  - [Index.html](#Index.html)
+  - [Bedienung](#Bedienung)
     -  [Starten](#starten)
     - [Beenden](#beenden)
   - [Testing](#testing)
@@ -30,7 +30,7 @@ Ziel ist es, einen Dienst mit Docker zu installieren, der auf jeder Maschine wie
 In diesem Beispiel verwende ich einen Nginx-Webserver. Das Image wurde mit einer Docker-Datei erstellt. Weitere Konfigurationen sind in der Datei docker-compose.yml dokumentiert. Sobald die Website ausgeführt wird, kann darauf zugegriffen werden.
 
 <a name="Vorbereitung"></a>
-## Vorbereitung mit Vagrant und Bitvise 
+## Vorbereitung mit Vagrant und Bitvise Client
 
 Für diese Projekt erstellen wir eine Vagrant VM auf der wir dann das Projekt ausführen. Damit diese fuktioniert brauchen wir ein Vagrant File. Dies geht mit folgendem befehl 
 
@@ -38,7 +38,7 @@ Für diese Projekt erstellen wir eine Vagrant VM auf der wir dann das Projekt au
 ```vagrant init```
 
 
-In diesem File ist definiert wie die Vm aussehen soll: 
+In diesem File ist definiert wie die VM aussehen soll: 
 
 ```
 # -*- mode: ruby -*-
@@ -99,9 +99,9 @@ end
 
 Hier drin ist auch definiert welches Betriebssystem verwendet wird. 
 
-mit ``` vagrant up ``` kann man die Vm dann aufbauen und starten.
+mit ``` vagrant up ``` kann man die VM dann aufbauen und starten.
 
-Mit Bitvise erstelle ich dann einen SSH key, der in meinem lokalen vagrant Ordner erstellt wird. Danach kann ich mich mit dem Terminal auf die VM verbinden. 
+Mit dem Bitvise Client erstelle ich dann einen SSH key, der in meinem lokalen Vagrant Ordner erstellt wird. Danach kann ich mich mit dem Terminal auf die VM verbinden. 
 
 Wenn dies vollbracht ist, geht es wie folgt weiter: 
 
@@ -122,8 +122,7 @@ EXPOSE 80
 <a name="Docker-Compose"></a>
 
 ## Docker-Compose
-Im Docker-Compose.yml File werden Konfigurationen am Image festgehalten. Wichtig ist, dass der Pfad des Dockerfiles auch angegeben wird. Auch sind Netzwerkkonfigurationen für die Ports in diesem File konfiguriert worden. 
-Achtung: Die Syntax beim .yml File ist sehr wichtig und kann schnell zu Fehlern führen.
+Im docker-compose.yml File werden Konfigurationen am Image festgehalten. Wichtig ist, dass der Pfad des Dockerfiles auch angegeben wird. Auch sind Netzwerkkonfigurationen für die Ports in diesem File konfiguriert worden. 
 
 ```
 version: '3'
@@ -140,7 +139,7 @@ services:
 ```
 Die Zeile "restart: always" ist für die Sicherheit zuständig. 
 
-Was man bei den .yml files beachten muss, ist der Syntax. Eine leertaste zu wenig oder zu viel und das ganze funktioniert nicht.
+Was man bei den .yml files beachten muss, ist der Syntax. Eine Leertaste zu wenig oder zu viel und es funktioniert nicht.
 
 <a name="Index.html"></a>
 ## Index.html
@@ -160,7 +159,6 @@ In diesem File ist der Code definiert, der auf der Webseite angezeigt wird. Wich
 </html>
 ```
 <a name="Bedienung"></a>
-
 ## Bedienung
 
 <a name="Starten"></a>
@@ -190,4 +188,4 @@ Es wird der Inhalt des Dokuments im Ordner "./site-content/"  aus dem Dockerfile
 
 - <https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Simple-Apache-docker-compose-example-with-Dockers-httpd-image>
 - <https://docs.docker.com/engine/reference/commandline/compose/>
-- Kursscript und Dokumentationen
+- Kursscript und Kursdokumentationen
